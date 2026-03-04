@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>AI Maze Solver - A*</title>
+<style>
+  body {
+    font-family: Arial;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+  }
+
+  h1 { margin: 20px; }
+
+  .maze {
+    display: grid;
+    grid-template-columns: repeat(5, 60px);
+    gap: 5px;
+    justify-content: center;
+    margin: 20px;
+  }
+
+  .cell {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    background: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  .wall { background: #020617; }
+  .start { background: #22c55e; }
+  .goal { background: #ef4444; }
+  .path { background: #38bdf8; color: #000; }
+
+  button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #22c55e;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h1>🤖 AI Giải Mê Cung bằng A*</h1>
+
+<div class="maze" id="maze"></div>
+
+<button onclick="solve()">Chạy A*</button>
+
+<script>
+const maze = [
+ [0,1,0,0,0],
+ [0,1,0,1,0],
+ [0,0,0,1,0],
+ [1,1,0,0,0],
+ [0,0,0,1,0]
+];
+
+const start = [0,0];
+const goal  = [4,4];
+
+const mazeDiv = document.getElementById("maze");
+
+// Vẽ mê cung
+function drawMaze(path=[]) {
+  mazeDiv.innerHTML = "";
+  for (let i=0;i<5;i++){
+    for (let j=0;j<5;j++){
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+
+      if (maze[i][j] === 1) cell.classList.add("wall");
+      if (i===start[0] && j===start[1]) {
+        cell.classList.add("start");
+        cell.innerText="S";
+      }
+      if (i===goal[0] && j===goal[1]) {
+        cell.classList.add("goal");
+        cell.innerText="G";
+      }
+      if (path.some(p => p[0]===i && p[1]===j)) {
+        cell.classList.add("path");
+      }
+
+      mazeDiv.appendChild(cell);
+    }
+  }
+}
+
+function heuristic(a,b){
+  return Math.abs(a[0]-b[0]) + Math.abs(a[1]-b[1]);
+}
+
+function solve(){
+  const open = [[0, start]];
+  const cameFrom = {};
+  const g = {};
+  g[start] = 0;
+
+  while(open.length){
+    open.sort((a,b)=>a[0]-b[0]);
+    const current = open.shift()[1];
+
+    if(current[0]===goal[0] && current[1]===goal[1]){
+      const path=[];
+      let cur=current.toString();
+      while(cur){
+        path.push(cur.split(",").map(Number));
+        cur=cameFrom[cur];
+      }
+      drawMaze(path);
+      return;
+    }
+
+    const dirs=[[1,0],[-1,0],[0,1],[0,-1]];
+    for(const d of dirs){
+      const nx=current[0]+d[0];
+      const ny=current[1]+d[1];
+      if(nx>=0 && ny>=0 && nx<5 && ny<5 && maze[nx][ny]===0){
+        const key=[nx,ny].toString();
+        const cost=g[current]+1;
+        if(g[key]===undefined || cost<g[key]){
+          g[key]=cost;
+          const f=cost+heuristic([nx,ny],goal);
+          open.push([f,[nx,ny]]);
+          cameFrom[key]=current.toString();
+        }
+      }
+    }
+  }
+}
+
+drawMaze();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Phí Khánh Linh</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fbc2eb, #a6c1ee);
+    background-size:400% 400%;
+    animation: gradientBG 10s ease infinite;
+}
+
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.card{
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(20px);
+    padding:60px 50px;
+    border-radius:30px;
+    text-align:center;
+    color:white;
+    box-shadow:0 25px 60px rgba(0,0,0,0.3);
+    width:450px;
+    z-index:10;
+}
+
+h1{
+    font-family:'Pacifico',cursive;
+    font-size:42px;
+    margin-bottom:10px;
+    text-shadow:0 0 20px rgba(255,255,255,0.9);
+}
+
+.name{
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:25px;
+}
+
+.wish{
+    margin-top:20px;
+    font-size:18px;
+    opacity:0;
+    transform:translateY(20px);
+    transition:all 0.8s ease;
+}
+
+.wish.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+button{
+    margin-top:20px;
+    padding:14px 35px;
+    border:none;
+    border-radius:40px;
+    background:#ff4d6d;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+    font-weight:500;
+}
+
+button:hover{
+    transform:scale(1.1);
+    background:#e63956;
+}
+
+/* ================= TIM ================= */
+.heart{
+    position:absolute;
+    color:#ff4d6d;
+    will-change:transform;
+    animation: flyUp linear forwards;
+}
+
+@keyframes flyUp{
+    0%{transform:translateY(100vh) scale(0.5); opacity:1;}
+    100%{transform:translateY(-10vh) scale(1.5); opacity:0;}
+}
+
+/* ================= ẢNH ================= */
+.floating-img{
+    position:absolute;
+    width:200px;
+    height:200px;
+    object-fit:cover;
+    border-radius:25px;
+    border:5px solid white;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+    will-change:transform;
+    animation: flyImg linear forwards;
+}
+
+@keyframes flyImg{
+    0%{
+        transform:translateY(100vh) rotate(-20deg) scale(0.6);
+        opacity:0;
+    }
+    20%{opacity:1;}
+    50%{
+        transform:translateY(40vh) rotate(10deg) scale(1);
+    }
+    100%{
+        transform:translateY(-25vh) rotate(25deg) scale(1.1);
+        opacity:0;
+    }
+}
+
+/* ================= PHÁO HOA ================= */
+.firework{
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode{
+    0%{transform:scale(1); opacity:1;}
+    100%{transform:scale(10); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>🎉 Happy Birthday 🎉</h1>
+    <div class="name">Phí Khánh Linh</div>
+
+    <button onclick="startEffect()">Nhấn để mở bất ngờ 🎂</button>
+
+    <div class="wish" id="wishText">
+        Chúc em Linh kế toán tuổi mới thật rực rỡ, hạnh phúc và luôn được yêu thương thật nhiều 💖✨
+    </div>
+</div>
+
+<script>
+
+let started = false;
+
+function startEffect(){
+
+    if(started) return; 
+    started = true;
+
+    document.getElementById("wishText").classList.add("show");
+
+    startHearts();
+    startImages();
+    createFireworks();
+}
+
+/* ================= TIM BAY LIÊN TỤC ================= */
+function startHearts(){
+    setInterval(()=>{
+
+        let heart=document.createElement("div");
+        heart.className="heart";
+        heart.innerHTML="❤";
+        heart.style.left=Math.random()*100+"vw";
+        heart.style.fontSize=(Math.random()*25+15)+"px";
+        heart.style.animationDuration=(Math.random()*3+4)+"s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>{heart.remove();},7000);
+
+    },500);
+}
+
+/* ================= ẢNH BAY LIÊN TỤC ================= */
+function startImages(){
+
+    let images=[
+        "1.jpg","2.jpg","3.jpg","4.jpg","5.jpg",
+        "6.jpg","7.jpg","8.jpg","9.jpg","10.jpg"
+    ];
+
+    setInterval(()=>{
+
+        let img=document.createElement("img");
+        img.src=images[Math.floor(Math.random()*images.length)];
+        img.className="floating-img";
+        img.style.left=Math.random()*85+"vw";
+        img.style.animationDuration=(Math.random()*3+6)+"s";
+
+        document.body.appendChild(img);
+
+        setTimeout(()=>{img.remove();},9000);
+
+    },800);
+}
+
+/* ================= PHÁO HOA ================= */
+function createFireworks(){
+
+    for(let i=0;i<40;i++){
+
+        let fw=document.createElement("div");
+        fw.className="firework";
+        fw.style.backgroundColor="hsl("+Math.random()*360+",100%,60%)";
+        fw.style.left=(i%2===0? "5%" : "95%");
+        fw.style.top=Math.random()*80+"%";
+
+        document.body.appendChild(fw);
+
+        setTimeout(()=>{fw.remove();},1000);
+    }
+}
+
+</script>
+
+</body>
+</html>
